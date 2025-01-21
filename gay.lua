@@ -553,29 +553,30 @@ function Library:CreateWindow(windowname,windowinfo)
             local Value;
 
             SliderButton.MouseButton1Down:Connect(function()
-                Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 273) *SliderTrail.AbsoluteSize.X) + tonumber(minvalue)) or 0
-                    callback(SliderNumber.Text)
-                SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
-                moveconnection = mouse.Move:Connect(function()
-                    SliderNumber.Text = Value
-                    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 273) * SliderTrail.AbsoluteSize.X) + tonumber(minvalue))
-                        callback(SliderNumber.Text)
-                        SliderHolder.BackgroundColor3 = Color3.fromRGB(14,14,14)
-                    SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
-                end)
-                releaseconnection = uis.InputEnded:Connect(function(Mouse)
-                    if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
-                        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 273) * SliderTrail.AbsoluteSize.X) + tonumber(minvalue))
-                            callback(SliderNumber.Text)
-                            SliderHolder.BackgroundColor3 = Color3.fromRGB(17,17,17)
-                        SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
-                        moveconnection:Disconnect()
-                        releaseconnection:Disconnect()
-                    end
-                end)
-            end)
-            --
+    local function updateValue()
+        Value = (((tonumber(maxvalue) - tonumber(minvalue)) / 273) * SliderTrail.AbsoluteSize.X) + tonumber(minvalue)
+        Value = math.clamp(Value, tonumber(minvalue), tonumber(maxvalue))
+        SliderNumber.Text = string.format("%.2f", Value) -- Display value with 2 decimal places
+        callback(SliderNumber.Text)
+    end
+
+    updateValue()
+    SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
+
+    moveconnection = mouse.Move:Connect(function()
+        updateValue()
+        SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
+    end)
+
+    releaseconnection = uis.InputEnded:Connect(function(Mouse)
+        if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
+            updateValue()
+            moveconnection:Disconnect()
+            releaseconnection:Disconnect()
         end
+    end)
+end)
+
 
         function PageElements:addTextBox(textboxname,textboxdefault,callback)
             local TextBoxHolder = Instance.new("Frame")
