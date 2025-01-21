@@ -29,7 +29,7 @@ function Library:CreateWindow(windowname,windowinfo)
     local YepCorner = Instance.new("UICorner")
 
     fu8rj82n.Name = "fu8rj82n"
-    fu8rj82n.Parent = game.CoreGui
+    fu8rj82n.Parent = gethui()
     fu8rj82n.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     fu8rj82n.ResetOnSpawn = false
     
