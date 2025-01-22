@@ -471,94 +471,106 @@ function Library:CreateWindow(windowname,windowinfo)
             end)
         end
 
-        function PageElements:addSlider(slidername,minvalue,maxvalue,callback)
-            local SliderHolder = Instance.new("Frame")
-            local SliderTitle = Instance.new("TextLabel")
-            local SliderHolderScript = Instance.new("UICorner")
-            local SliderButton = Instance.new("TextButton")
-            local SliderButtonCorner = Instance.new("UICorner")
-            local SliderTrail = Instance.new("Frame")
-            local SliderTrailCorner = Instance.new("UICorner")
-            local SliderNumber = Instance.new("TextLabel")
+        function PageElements:addSlider(slidername, minvalue, maxvalue, callback)
+    -- Create necessary UI elements
+    local SliderHolder = Instance.new("Frame")
+    local SliderTitle = Instance.new("TextLabel")
+    local SliderHolderScript = Instance.new("UICorner")
+    local SliderButton = Instance.new("TextButton")
+    local SliderButtonCorner = Instance.new("UICorner")
+    local SliderTrail = Instance.new("Frame")
+    local SliderTrailCorner = Instance.new("UICorner")
+    local SliderNumber = Instance.new("TextLabel")
 
-            local callback = callback or function() end
+    -- Default callback if none provided
+    callback = callback or function() end
 
-            SliderHolder.Name = "SliderHolder"
-            SliderHolder.Parent = Home
-            SliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
-            SliderHolder.BorderColor3 = Color3.fromRGB(17, 16, 16)
-            SliderHolder.BorderSizePixel = 0
-            SliderHolder.Position = UDim2.new(0.0167785231, 0, 0, 0)
-            SliderHolder.Size = UDim2.new(0, 288, 0, 26)
-            
-            SliderTitle.Name = "SliderTitle"
-            SliderTitle.Parent = SliderHolder
-            SliderTitle.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
-            SliderTitle.BackgroundTransparency = 1.000
-            SliderTitle.BorderColor3 = Color3.fromRGB(17, 17, 17)
-            SliderTitle.BorderSizePixel = 0
-            SliderTitle.Position = UDim2.new(0.024305556, 0, 0.15384616, 0)
-            SliderTitle.Size = UDim2.new(0, 239, 0, 8)
-            SliderTitle.Font = Enum.Font.GothamSemibold
-            SliderTitle.Text = slidername
-            SliderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-            SliderTitle.TextSize = 11.000
-            SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
-            
-            SliderHolderScript.CornerRadius = UDim.new(0, 5)
-            SliderHolderScript.Name = "SliderHolderScript"
-            SliderHolderScript.Parent = SliderHolder
-            
-            SliderButton.Name = "SliderButton"
-            SliderButton.Parent = SliderHolder
-            SliderButton.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
-            SliderButton.BorderColor3 = Color3.fromRGB(15, 15, 15)
-            SliderButton.BorderSizePixel = 0
-            SliderButton.Position = UDim2.new(0, 8, 0, 17)
-            SliderButton.Size = UDim2.new(0, 273, 0, 7)
-            SliderButton.AutoButtonColor = false
-            SliderButton.Font = Enum.Font.SourceSans
-            SliderButton.Text = ""
-            SliderButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-            SliderButton.TextSize = 14.000
-            
-            SliderButtonCorner.Name = "SliderButtonCorner"
-            SliderButtonCorner.Parent = SliderButton
-            
-            SliderTrail.Name = "SliderTrail"
-            SliderTrail.Parent = SliderButton
-            SliderTrail.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-            SliderTrail.BorderColor3 = Color3.fromRGB(40, 40, 40)
-            SliderTrail.Size = UDim2.new(0, 10, 0, 7)
-            
-            SliderTrailCorner.Name = "SliderTrailCorner"
-            SliderTrailCorner.Parent = SliderTrail
-            
-            SliderNumber.Name = "SliderNumber"
-            SliderNumber.Parent = SliderHolder
-            SliderNumber.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
-            SliderNumber.BackgroundTransparency = 1.000
-            SliderNumber.BorderColor3 = Color3.fromRGB(17, 17, 17)
-            SliderNumber.BorderSizePixel = 0
-            SliderNumber.Position = UDim2.new(0.88499999, 0, 0.192000002, 1)
-            SliderNumber.Size = UDim2.new(0, 33, 0, 6)
-            SliderNumber.Font = Enum.Font.GothamSemibold
-            SliderNumber.Text = minvalue or "0"
-            SliderNumber.TextColor3 = Color3.fromRGB(255, 255, 255)
-            SliderNumber.TextSize = 10.000
-            SliderNumber.TextXAlignment = Enum.TextXAlignment.Left
-             
-local mouse = game.Players.LocalPlayer:GetMouse()
-local uis = game:GetService("UserInputService")
-local Value
+    -- Setting up Slider Holder properties
+    SliderHolder.Name = "SliderHolder"
+    SliderHolder.Parent = Home
+    SliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+    SliderHolder.BorderColor3 = Color3.fromRGB(17, 16, 16)
+    SliderHolder.BorderSizePixel = 0
+    SliderHolder.Position = UDim2.new(0.0167785231, 0, 0, 0)
+    SliderHolder.Size = UDim2.new(0, 288, 0, 26)
 
-SliderButton.MouseButton1Down:Connect(function()
-    local minVal = tonumber(minvalue) or 0
-    local maxVal = tonumber(maxvalue) or 5
-    local sliderWidth = 273 -- Width of the slider track in pixels
+    -- Setting up Slider Title properties
+    SliderTitle.Name = "SliderTitle"
+    SliderTitle.Parent = SliderHolder
+    SliderTitle.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+    SliderTitle.BackgroundTransparency = 1
+    SliderTitle.BorderColor3 = Color3.fromRGB(17, 17, 17)
+    SliderTitle.BorderSizePixel = 0
+    SliderTitle.Position = UDim2.new(0.024305556, 0, 0.15384616, 0)
+    SliderTitle.Size = UDim2.new(0, 239, 0, 8)
+    SliderTitle.Font = Enum.Font.GothamSemibold
+    SliderTitle.Text = slidername
+    SliderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SliderTitle.TextSize = 11
+    SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Function to update the slider value
+    -- Slider Holder corner styling
+    SliderHolderScript.CornerRadius = UDim.new(0, 5)
+    SliderHolderScript.Name = "SliderHolderScript"
+    SliderHolderScript.Parent = SliderHolder
+
+    -- Slider Button properties
+    SliderButton.Name = "SliderButton"
+    SliderButton.Parent = SliderHolder
+    SliderButton.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+    SliderButton.BorderColor3 = Color3.fromRGB(15, 15, 15)
+    SliderButton.BorderSizePixel = 0
+    SliderButton.Position = UDim2.new(0, 8, 0, 17)
+    SliderButton.Size = UDim2.new(0, 273, 0, 7)
+    SliderButton.AutoButtonColor = false
+    SliderButton.Font = Enum.Font.SourceSans
+    SliderButton.Text = ""
+    SliderButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+    SliderButton.TextSize = 14
+
+    -- Slider Button Corner properties
+    SliderButtonCorner.Name = "SliderButtonCorner"
+    SliderButtonCorner.Parent = SliderButton
+
+    -- Slider Trail properties
+    SliderTrail.Name = "SliderTrail"
+    SliderTrail.Parent = SliderButton
+    SliderTrail.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    SliderTrail.BorderColor3 = Color3.fromRGB(40, 40, 40)
+    SliderTrail.Size = UDim2.new(0, 10, 0, 7)
+
+    -- Slider Trail Corner properties
+    SliderTrailCorner.Name = "SliderTrailCorner"
+    SliderTrailCorner.Parent = SliderTrail
+
+    -- Slider Number properties (display the current value)
+    SliderNumber.Name = "SliderNumber"
+    SliderNumber.Parent = SliderHolder
+    SliderNumber.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+    SliderNumber.BackgroundTransparency = 1
+    SliderNumber.BorderColor3 = Color3.fromRGB(17, 17, 17)
+    SliderNumber.BorderSizePixel = 0
+    SliderNumber.Position = UDim2.new(0.88499999, 0, 0.192000002, 1)
+    SliderNumber.Size = UDim2.new(0, 33, 0, 6)
+    SliderNumber.Font = Enum.Font.GothamSemibold
+    SliderNumber.Text = minvalue or "0"
+    SliderNumber.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SliderNumber.TextSize = 10
+    SliderNumber.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Local variables for mouse tracking
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    local uis = game:GetService("UserInputService")
+    local Value
+
+    -- Function to update the slider value based on mouse position
     local function updateSlider()
+        -- Ensure the min and max values are numbers
+        local minVal = tonumber(minvalue) or 0
+        local maxVal = tonumber(maxvalue) or 5
+        local sliderWidth = 273 -- Width of the slider track in pixels
+
+        -- Get the position of the slider trail and calculate the offset
         local offset = math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, sliderWidth)
         SliderTrail.Size = UDim2.new(0, offset, 0, 7)
 
@@ -566,40 +578,34 @@ SliderButton.MouseButton1Down:Connect(function()
         Value = ((maxVal - minVal) / sliderWidth) * offset + minVal
         Value = tonumber(string.format("%.2f", Value)) -- Force decimal precision
 
-        -- Debugging Statements
-        print("Mouse X:", mouse.X)
-        print("SliderTrail AbsolutePosition X:", SliderTrail.AbsolutePosition.X)
-        print("Offset:", offset)
-        print("Raw Value:", ((maxVal - minVal) / sliderWidth) * offset + minVal)
-        print("Formatted Value:", Value)
-        print("Displayed Text:", SliderNumber.Text)
-
-        SliderNumber.Text = tostring(Value) -- Update the display text
+        -- Update the slider number label
+        SliderNumber.Text = tostring(Value)
         callback(Value) -- Pass the numeric value to the callback
     end
 
-    -- Initial update when the slider is clicked
-    updateSlider()
+    -- Update the slider when the button is clicked
+    SliderButton.MouseButton1Down:Connect(function()
+        updateSlider() -- Update slider immediately
 
-    -- Connect mouse movement
-    moveconnection = mouse.Move:Connect(function()
-        updateSlider()
-        SliderHolder.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+        -- Track mouse movement to update the slider
+        local moveconnection
+        moveconnection = mouse.Move:Connect(function()
+            updateSlider()
+            SliderHolder.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+        end)
+
+        -- When the mouse is released, finalize the update and disconnect the connections
+        local releaseconnection
+        releaseconnection = uis.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                updateSlider() -- Final update on mouse release
+                SliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+                moveconnection:Disconnect()
+                releaseconnection:Disconnect()
+            end
+        end)
     end)
-
-    -- Disconnect on mouse release
-    releaseconnection = uis.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            updateSlider() -- Final update
-            SliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
-            moveconnection:Disconnect()
-            releaseconnection:Disconnect()
-        end
-    end)
-end)
-
-            --
-        end
+end
 
         function PageElements:addTextBox(textboxname,textboxdefault,callback)
             local TextBoxHolder = Instance.new("Frame")
