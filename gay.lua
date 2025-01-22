@@ -548,32 +548,56 @@ function Library:CreateWindow(windowname,windowinfo)
             SliderNumber.TextSize = 10.000
             SliderNumber.TextXAlignment = Enum.TextXAlignment.Left
              
-            local mouse = game.Players.LocalPlayer:GetMouse()
-            local uis = game:GetService("UserInputService")
-            local Value;
+local mouse = game.Players.LocalPlayer:GetMouse()
+local uis = game:GetService("UserInputService")
+local Value
 
-            SliderButton.MouseButton1Down:Connect(function()
-                Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 273) *SliderTrail.AbsoluteSize.X) + tonumber(minvalue)) or 0
-                    callback(SliderNumber.Text)
-                SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
-                moveconnection = mouse.Move:Connect(function()
-                    SliderNumber.Text = Value
-                    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 273) * SliderTrail.AbsoluteSize.X) + tonumber(minvalue))
-                        callback(SliderNumber.Text)
-                        SliderHolder.BackgroundColor3 = Color3.fromRGB(14,14,14)
-                    SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
-                end)
-                releaseconnection = uis.InputEnded:Connect(function(Mouse)
-                    if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
-                        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 273) * SliderTrail.AbsoluteSize.X) + tonumber(minvalue))
-                            callback(SliderNumber.Text)
-                            SliderHolder.BackgroundColor3 = Color3.fromRGB(17,17,17)
-                        SliderTrail.Size = UDim2.new(0, math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, 273), 0, 7)
-                        moveconnection:Disconnect()
-                        releaseconnection:Disconnect()
-                    end
-                end)
-            end)
+SliderButton.MouseButton1Down:Connect(function()
+    local minVal = tonumber(minvalue) or 0
+    local maxVal = tonumber(maxvalue) or 5
+    local sliderWidth = 273 -- Width of the slider track in pixels
+
+    -- Function to update the slider value
+    local function updateSlider()
+        local offset = math.clamp(mouse.X - SliderTrail.AbsolutePosition.X, 0, sliderWidth)
+        SliderTrail.Size = UDim2.new(0, offset, 0, 7)
+
+        -- Calculate the slider value with precision
+        Value = ((maxVal - minVal) / sliderWidth) * offset + minVal
+        Value = tonumber(string.format("%.2f", Value)) -- Force decimal precision
+
+        -- Debugging Statements
+        print("Mouse X:", mouse.X)
+        print("SliderTrail AbsolutePosition X:", SliderTrail.AbsolutePosition.X)
+        print("Offset:", offset)
+        print("Raw Value:", ((maxVal - minVal) / sliderWidth) * offset + minVal)
+        print("Formatted Value:", Value)
+        print("Displayed Text:", SliderNumber.Text)
+
+        SliderNumber.Text = tostring(Value) -- Update the display text
+        callback(Value) -- Pass the numeric value to the callback
+    end
+
+    -- Initial update when the slider is clicked
+    updateSlider()
+
+    -- Connect mouse movement
+    moveconnection = mouse.Move:Connect(function()
+        updateSlider()
+        SliderHolder.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+    end)
+
+    -- Disconnect on mouse release
+    releaseconnection = uis.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            updateSlider() -- Final update
+            SliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+            moveconnection:Disconnect()
+            releaseconnection:Disconnect()
+        end
+    end)
+end)
+
             --
         end
 
