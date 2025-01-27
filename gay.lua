@@ -607,6 +607,126 @@ function Library:CreateWindow(windowname,windowinfo)
     end)
 end
 
+function PageElements:addColorGradientSlider(sliderName, callback)
+    -- Create necessary UI elements
+    local ColorSliderHolder = Instance.new("Frame")
+    local ColorSliderTitle = Instance.new("TextLabel")
+    local ColorSliderCorner = Instance.new("UICorner")
+    local ColorSliderButton = Instance.new("TextButton")
+    local ColorSliderButtonCorner = Instance.new("UICorner")
+    local ColorSliderTrail = Instance.new("Frame")
+    local ColorSliderTrailCorner = Instance.new("UICorner")
+    local ColorSliderGradient = Instance.new("UIGradient")
+    local ColorPreviewBox = Instance.new("Frame")
+
+    -- Default callback if none provided
+    callback = callback or function() end
+
+    -- Color Slider Holder
+    ColorSliderHolder.Name = "ColorSliderHolder"
+    ColorSliderHolder.Parent = Home
+    ColorSliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+    ColorSliderHolder.BorderSizePixel = 0
+    ColorSliderHolder.Position = UDim2.new(0.0167785231, 0, 0, 0)
+    ColorSliderHolder.Size = UDim2.new(0, 288, 0, 40)
+
+    -- Slider Title
+    ColorSliderTitle.Name = "ColorSliderTitle"
+    ColorSliderTitle.Parent = ColorSliderHolder
+    ColorSliderTitle.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+    ColorSliderTitle.BackgroundTransparency = 1
+    ColorSliderTitle.Position = UDim2.new(0.024305556, 0, 0.15, 0)
+    ColorSliderTitle.Size = UDim2.new(0, 200, 0, 10)
+    ColorSliderTitle.Font = Enum.Font.GothamSemibold
+    ColorSliderTitle.Text = sliderName
+    ColorSliderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ColorSliderTitle.TextSize = 11
+    ColorSliderTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Color Slider Corner
+    ColorSliderCorner.CornerRadius = UDim.new(0, 5)
+    ColorSliderCorner.Parent = ColorSliderHolder
+
+    -- Slider Button
+    ColorSliderButton.Name = "ColorSliderButton"
+    ColorSliderButton.Parent = ColorSliderHolder
+    ColorSliderButton.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+    ColorSliderButton.Position = UDim2.new(0, 8, 0, 22)
+    ColorSliderButton.Size = UDim2.new(0, 273, 0, 7)
+    ColorSliderButton.AutoButtonColor = false
+
+    -- Slider Button Corner
+    ColorSliderButtonCorner.CornerRadius = UDim.new(0, 5)
+    ColorSliderButtonCorner.Parent = ColorSliderButton
+
+    -- Slider Trail
+    ColorSliderTrail.Name = "ColorSliderTrail"
+    ColorSliderTrail.Parent = ColorSliderButton
+    ColorSliderTrail.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ColorSliderTrail.Size = UDim2.new(0, 10, 0, 7)
+
+    -- Slider Trail Corner
+    ColorSliderTrailCorner.CornerRadius = UDim.new(0, 5)
+    ColorSliderTrailCorner.Parent = ColorSliderTrail
+
+    -- UI Gradient for Color
+    ColorSliderGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)), -- Red
+        ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)), -- Green
+        ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)), -- Blue
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)) -- Wrap back to Red
+    })
+    ColorSliderGradient.Parent = ColorSliderTrail
+
+    -- Color Preview Box
+    ColorPreviewBox.Name = "ColorPreviewBox"
+    ColorPreviewBox.Parent = ColorSliderHolder
+    ColorPreviewBox.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Initial red
+    ColorPreviewBox.Position = UDim2.new(0.85, 0, 0.15, 0)
+    ColorPreviewBox.Size = UDim2.new(0, 20, 0, 20)
+
+    -- Local Variables
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    local uis = game:GetService("UserInputService")
+    local currentColor = Color3.fromRGB(255, 0, 0)
+
+    -- Function to update the color slider
+    local function updateColorSlider()
+        local sliderWidth = 273
+        local offset = math.clamp(mouse.X - ColorSliderTrail.AbsolutePosition.X, 0, sliderWidth)
+        ColorSliderTrail.Size = UDim2.new(0, offset, 0, 7)
+
+        -- Calculate color based on gradient position
+        local hue = offset / sliderWidth
+        currentColor = Color3.fromHSV(hue, 1, 1) -- Full saturation and value
+        ColorPreviewBox.BackgroundColor3 = currentColor
+        callback(currentColor)
+    end
+
+    -- Mouse Events
+    ColorSliderButton.MouseButton1Down:Connect(function()
+        updateColorSlider()
+
+        local moveConnection
+        moveConnection = mouse.Move:Connect(function()
+            updateColorSlider()
+            ColorSliderHolder.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+        end)
+
+        local releaseConnection
+        releaseConnection = uis.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                updateColorSlider()
+                ColorSliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+                moveConnection:Disconnect()
+                releaseConnection:Disconnect()
+            end
+        end)
+    end)
+end
+
+		
+
         function PageElements:addTextBox(textboxname,textboxdefault,callback)
             local TextBoxHolder = Instance.new("Frame")
             local TextBoxTitle = Instance.new("TextLabel")
