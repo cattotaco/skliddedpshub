@@ -493,6 +493,11 @@ function Library:CreateWindow(windowname,windowinfo)
     SliderHolder.BorderSizePixel = 0
     SliderHolder.Position = UDim2.new(0.0167785231, 0, 0, 0)
     SliderHolder.Size = UDim2.new(0, 288, 0, 26)
+			
+    SliderHolder.MinValue = minvalue
+    SliderHolder.MaxValue = maxvalue
+    SliderHolder.Callback = callback
+
 
     -- Setting up Slider Title properties
     SliderTitle.Name = "SliderTitle"
@@ -558,6 +563,7 @@ function Library:CreateWindow(windowname,windowinfo)
     SliderNumber.TextSize = 10
     SliderNumber.TextXAlignment = Enum.TextXAlignment.Left
 
+			
     -- Local variables for mouse tracking
     local mouse = game.Players.LocalPlayer:GetMouse()
     local uis = game:GetService("UserInputService")
@@ -607,6 +613,38 @@ function Library:CreateWindow(windowname,windowinfo)
     end)
 end
 
+function PageElements:setSliderValue(sliderHolder, newValue)
+    -- Ensure sliderHolder and newValue are valid
+    if not sliderHolder or not newValue then return end
+
+    -- Find necessary components in the sliderHolder
+    local sliderButton = sliderHolder:FindFirstChild("SliderButton")
+    local sliderTrail = sliderButton:FindFirstChild("SliderTrail")
+    local sliderNumber = sliderHolder:FindFirstChild("SliderNumber")
+
+    -- Calculate slider width and limits
+    local minValue = tonumber(sliderHolder.MinValue) or 0
+    local maxValue = tonumber(sliderHolder.MaxValue) or 5
+    local sliderWidth = 273 -- Width of the slider track
+
+    -- Clamp the newValue to the slider's range
+    local clampedValue = math.clamp(newValue, minValue, maxValue)
+
+    -- Calculate the trail width based on the value
+    local trailWidth = math.floor((clampedValue - minValue) / (maxValue - minValue) * sliderWidth)
+
+    -- Update slider visuals
+    sliderTrail.Size = UDim2.new(0, trailWidth, 0, 7)
+    sliderNumber.Text = tostring(string.format("%.2f", clampedValue))
+
+    -- Trigger the slider callback
+    local callback = sliderHolder.Callback
+    if callback then
+        callback(clampedValue)
+    end
+end
+
+		
 function PageElements:addColorGradientSlider(sliderName, callback)
     -- Create necessary UI elements
     local ColorSliderHolder = Instance.new("Frame")
