@@ -400,6 +400,9 @@ function Library:CreateWindow(windowname,windowinfo)
             ToggleHolder.BorderSizePixel = 0
             ToggleHolder.Position = UDim2.new(0.0167785231, 0, 0, 0)
             ToggleHolder.Size = UDim2.new(0, 288, 0, 26)
+
+            ToggleHolder.ToggleName = togglename
+            ToggleHolder.Callback = callback
             
             ToggleHolderCorner.CornerRadius = UDim.new(0, 5)
             ToggleHolderCorner.Name = "ToggleHolderCorner"
