@@ -625,7 +625,6 @@ function PageElements:addColorGradientSlider(sliderName, callback)
     -- Color Slider Holder
     ColorSliderHolder.Name = "ColorSliderHolder"
     ColorSliderHolder.Parent = Home
-    ColorSliderHolder.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
     ColorSliderHolder.BorderSizePixel = 0
     ColorSliderHolder.Position = UDim2.new(0.0167785231, 0, 0, 0)
     ColorSliderHolder.Size = UDim2.new(0, 288, 0, 40)
