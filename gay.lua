@@ -676,7 +676,7 @@ function PageElements:addColorGradientSlider(sliderName, callback)
         ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)), -- Blue
         ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)) -- Wrap back to Red
     })
-    ColorSliderGradient.Parent = ColorSliderTrail
+    ColorSliderGradient.Parent = ColorSliderHolder
 
     -- Color Preview Box
     ColorPreviewBox.Name = "ColorPreviewBox"
